@@ -7,6 +7,8 @@ export function setupSwagger(app: INestApplication) {
     .setDescription('API documentation for the NEST application')
     .setVersion('1.0')
     .addTag('users')
+    .addTag('profile')
+    .addCookieAuth('access_token')
     .build();
 
   const documentFactory = () =>

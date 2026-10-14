@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
@@ -42,5 +42,19 @@ export class UsersService {
 
   async findByEmailWithPassword(email: string): Promise<UserDocument | null> {
     return this.userModel.findOne({ email }).select('+password').exec();
+  }
+
+  async findProfileById(id: string) {
+    const user = await this.userModel.findById(id).exec();
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return {
+      id: user._id.toString(),
+      name: user.name,
+      email: user.email,
+    };
   }
 }
