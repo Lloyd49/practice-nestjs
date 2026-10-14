@@ -13,3 +13,12 @@ export async function apiFetch(
     },
   });
 }
+
+export async function getErrorMessage(response: Response, fallback: string) {
+  try {
+    const data = (await response.json()) as { message?: string | string[] };
+    return Array.isArray(data.message) ? data.message.join(', ') : (data.message ?? fallback);
+  } catch {
+    return fallback;
+  }
+}
