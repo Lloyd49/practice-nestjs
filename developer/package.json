@@ -82,6 +82,11 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@nestjs/mongoose$": "<rootDir>/../test/mocks/nestjs-mongoose.ts",
+      "^@nestjs/jwt$": "<rootDir>/../test/mocks/nestjs-jwt.ts",
+      "^@nestjs/passport$": "<rootDir>/../test/mocks/nestjs-passport.ts"
+    }
   }
 }

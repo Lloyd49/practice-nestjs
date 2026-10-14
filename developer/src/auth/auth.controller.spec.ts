@@ -1,18 +1,22 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 
 describe('AuthController', () => {
-  let controller: AuthController;
+  it('stores a successful login token in an HttpOnly cookie', async () => {
+    const controller = new AuthController({
+      login: jest.fn().mockResolvedValue({ access_token: 'token' }),
+    } as never);
+    const response = { cookie: jest.fn() };
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [AuthController],
-    }).compile();
-
-    controller = module.get<AuthController>(AuthController);
-  });
-
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+    await expect(
+      controller.login(
+        { email: 'jane@example.com', password: 'password123' },
+        response as never,
+      ),
+    ).resolves.toEqual({ message: 'เข้าสู่ระบบสำเร็จ' });
+    expect(response.cookie).toHaveBeenCalledWith(
+      'access_token',
+      'token',
+      expect.objectContaining({ httpOnly: true, sameSite: 'strict' }),
+    );
   });
 });
